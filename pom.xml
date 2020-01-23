@@ -12,7 +12,7 @@
 	<artifactId>lglqms-bs-gw</artifactId>
 	<packaging>jar</packaging>
 
-	<description>lglqms 服务网关，基于 spring cloud gateway</description>
+	<description>devjlbgit lglqms 服务网关，基于 spring cloud gateway</description>
 
 	<dependencies>
 		<!--gateway 网关依赖,内置webflux 依赖-->
