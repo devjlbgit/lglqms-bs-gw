@@ -1,0 +1,57 @@
+# EUREKA Client 相关配置 Start
+#   1. EUREKA 的用户名和密码
+EUREKA_SUNAME: lglqms
+EUREKA_SUPWD: lglqms023
+
+#   2. EUREKA 集群的地址
+EUREKA_ADDR_H1: e1.lglqms.com
+EUREKA_PORT_H1: 8761
+EUREKA_ADDR_H2: e2.lglqms.com
+EUREKA_PORT_H2: 8762
+EUREKA_ADDR_H3: e3.lglqms.com
+EUREKA_PORT_H3: 8763
+# EUREKA Client 相关配置 End
+
+# Config Client 相关配置 Start
+#   1. Config 的用户名和密码
+CFGSRV_SUNAME: lglqms
+CFGSRV_SUPWD: lglqms023
+# Config Client 相关配置 End
+
+server:
+  port: 9999
+
+spring:
+  application:
+    name: lglqms-bs-gw
+  profiles:
+    active: dev
+
+  # 配置中心
+  cloud:
+    config:
+      fail-fast: true # 如是true表示如果无法连接到配置服务器则直接是启动失败。
+      name: ${spring.application.name}
+      profile: ${spring.profiles.active}
+      discovery:
+        enabled: true
+        service-id: lglqms-bs-cfg
+      username: ${CFGSRV_SUNAME}
+      password: ${CFGSRV_SUPWD}
+      retry:
+        max-attempts: 3 # 最大重试次数，默认为6 次
+        initial-interval: 1000 # 重试间隔，默认为1000
+
+  main:
+    allow-bean-definition-overriding: true
+
+# 注册中心配置
+eureka:
+  instance:
+    prefer-ip-address: true # 就可以将IP注册到Eureka Server上，而如果不配置就是机器的主机名。Spring就会自动为我们获取第一个非回环IP地址
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port} # 表示实例在注册中心注册的唯一ID。
+  client:
+    service-url:
+      #defaultZone: http://lglqms:lglqms023@127.0.0.1:8761/eureka
+      defaultZone: http://${EUREKA_SUNAME}:${EUREKA_SUPWD}@${EUREKA_ADDR_H1}:${EUREKA_PORT_H1}/eureka/,http://${EUREKA_SUNAME}:${EUREKA_SUPWD}@${EUREKA_ADDR_H2}:${EUREKA_PORT_H2}/eureka/,http://${EUREKA_SUNAME}:${EUREKA_SUPWD}@${EUREKA_ADDR_H3}:${EUREKA_PORT_H3}/eureka/
+
